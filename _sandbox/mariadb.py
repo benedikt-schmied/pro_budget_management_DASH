@@ -1,8 +1,8 @@
-#!/usr/bin/python 
+#!/usr/bin/python3 
 # coding=latin-1
 
 import sys
-import mysql.connector as mariadb
+import pymysql as mariadb
 
 sys.path.append('./')
 
@@ -34,9 +34,24 @@ class c_bm_database():
         return 
         
     def manual_db_command(self, _text):
+        
         self.cursor.execute(_text)
         self.conn.commit
-
+        
+    def create(self):
+        stmts = ["CREATE TABLE IF NOT EXISTS projects (project_id INTEGER PRIMARY KEY,  project_name TEXT );"
+        ]
+        for stmt in stmts:
+            print(stmt)
+            self.cursor.execute(stmt)
+            self.conn.commit()
+        
+        data = [[1, "0010"], [2, "0021"]]
+        for datum in data:
+            print(datum)
+            self.cursor.execute("INSERT INTO projects (project_id, project_name) VALUES (1, 0010);")
+            self.conn.commit()
+        
 
 class c_app():
     ''' application, does not really do anything
@@ -52,11 +67,10 @@ class c_app():
     def run(self):
         ''' runs the main 
         '''
-        self.logger.debug("application running")
         
         bm_database = c_bm_database()
         (conn, cursor) =  bm_database.connect()
-        
+        bm_database.create()
         bm_database.disconnect()
     
 if __name__ == "__main__":
